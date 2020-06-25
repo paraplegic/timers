@@ -55,7 +55,7 @@ $(BIN_DIR)/timer:	$(SRC_DIR)/timer.c $(SRC_DIR)/timer.h
 
 backup:	realclean backup.tgz
 
-backup.tgz: $(SRC_DIR) Makefile README.txt main.c
+backup.tgz: $(SRC_DIR) Makefile README.md main.c
 	tar -zcvf $@ $^
 
 crash_srv: main.c 
