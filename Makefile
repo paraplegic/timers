@@ -3,8 +3,10 @@ HDR=clock.h obcache.h timer.h
 OBJ=clock.o obcache.o timer.o
 
 
-DEST_DIR ?=.
-SRC_DIR =./src
+SRC_DIR = ./src
+TGT_DIR = ./usr
+
+DEST_DIR ?= $(TGT_DIR)
 INC_DIR = $(DEST_DIR)/include
 LIB_DIR = $(DEST_DIR)/lib
 BIN_DIR = $(DEST_DIR)/bin
@@ -40,6 +42,7 @@ realclean:	clean
 	rm -rf $(LIB_DIR)
 	rm -rf $(INC_DIR)
 	rm -rf $(BIN_DIR)
+	rm -rf $(DEST_DIR)
 
 test:	install $(BIN_DIR)/clock $(BIN_DIR)/obcache $(BIN_DIR)/timer
 	$(BIN_DIR)/clock
