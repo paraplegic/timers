@@ -2,15 +2,16 @@ SRC=clock.c obcache.c timer.c
 HDR=clock.h obcache.h timer.h
 OBJ=clock.o obcache.o timer.o
 
-CC=gcc
 
-SRC_DIR=./src
-INC_DIR=./include
-LIB_DIR=./lib
-BIN_DIR=./bin
+DEST_DIR ?=.
+SRC_DIR =./src
+INC_DIR = $(DEST_DIR)/include
+LIB_DIR = $(DEST_DIR)/lib
+BIN_DIR = $(DEST_DIR)/bin
 
-LDOPTS +=-L $(LIB_DIR)
-COPTS +=-g -I $(INC_DIR)
+CC ?= gcc
+LDOPTS += -L $(LIB_DIR)
+COPTS += -g -I $(INC_DIR)
 
 all:	install $(BIN_DIR)/crash_srv
 	
