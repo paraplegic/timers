@@ -3,15 +3,16 @@ HDR=clock.h obcache.h timer.h
 OBJ=clock.o obcache.o timer.o
 
 CC=gcc
-COPTS=-g
-COPTS=-g
 
 SRC_DIR=./src
 INC_DIR=./include
 LIB_DIR=./lib
 BIN_DIR=./bin
 
-all:	install crash_srv
+LDOPTS +=-L $(LIB_DIR)
+COPTS +=-g -I $(INC_DIR)
+
+all:	install $(BIN_DIR)/crash_srv
 	
 %.o: $(SRC_DIR)/%.c 
 	$(CC) -c -o $@ $< $(OPTS)
@@ -58,6 +59,5 @@ backup:	realclean backup.tgz
 backup.tgz: $(SRC_DIR) Makefile README.md main.c
 	tar -zcvf $@ $^
 
-crash_srv: main.c 
-	$(CC) $(COPTS) -o $@ $< -I $(INC_DIR) -L $(LIB_DIR) -lEvent -lrt
-
+$(BIN_DIR)/crash_srv: main.c 
+	$(CC) $(COPTS) -o $@ $< $(LDOPTS) -lEvent -lrt

@@ -5,12 +5,21 @@
 #define BUF_SIZ	40
 #define ABS(x) ((x<0)? -1*x: x)
 
+/*
+	::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+	this is a small crash server, which logs to stderr some timer data, and then schedules
+	a segmentation fault in order to crash and create a core file.  It has no other purpose
+	and should not be used for anything, unless you actually know what you're doing. 
+	::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+*/
+
+char *SERVICE=NULL;
+
 int randval(int hi, int lo){
 	int rv = rand() % (hi+1 - lo) + lo;
 	return ABS(rv) ;
 }
 
-char *SERVICE=NULL;
 void log_put( char *msg ){
 	char *ts = clk_human_local(0);
 	fprintf(stderr, "%s %s: %s\n", ts, SERVICE, msg );
@@ -26,7 +35,6 @@ void segfaultme(int signal){
 	logger(signal);
 	*bad_ptr = 0xDEADBEEF;
 }
-
 
 int main( int argc, char **argv ){
 	int crash_schedule; 
