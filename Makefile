@@ -6,14 +6,15 @@ OBJ=clock.o obcache.o timer.o
 SRC_DIR = ./src
 TGT_DIR = ./usr
 
+CC ?= gcc
 DEST_DIR ?= $(TGT_DIR)
+
 INC_DIR = $(DEST_DIR)/include
 LIB_DIR = $(DEST_DIR)/lib
 BIN_DIR = $(DEST_DIR)/bin
 
-CC ?= gcc
 LDOPTS += -L $(LIB_DIR)
-COPTS += -g -I $(INC_DIR)
+COPTS += -I $(INC_DIR)
 
 all:	install $(BIN_DIR)/crash_srv
 	
