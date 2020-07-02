@@ -5,6 +5,7 @@ OBJ=clock.o obcache.o timer.o
 
 SRC_DIR = ./src
 TGT_DIR = ./usr
+TEST_DIR = ./test
 
 CC ?= gcc
 DEST_DIR ?= $(TGT_DIR)
@@ -36,8 +37,8 @@ install:	init	$(LIB_DIR)/libEvent.so
 clean:
 	rm -rf *.o
 	rm -rf core
-	rm -rf crash_srv
 	rm -rf backup.tgz
+	rm -rf $(TEST_DIR)
 
 realclean:	clean
 	rm -rf $(LIB_DIR)
@@ -45,18 +46,21 @@ realclean:	clean
 	rm -rf $(BIN_DIR)
 	rm -rf $(DEST_DIR)
 
-test:	install $(BIN_DIR)/clock $(BIN_DIR)/obcache $(BIN_DIR)/timer
-	$(BIN_DIR)/clock
-	$(BIN_DIR)/obcache
-	$(BIN_DIR)/timer
+test_dir:	$(TEST_DIR)
+	mkdir -p $(TEST_DIR)
 
-$(BIN_DIR)/obcache: $(SRC_DIR)/obcache.c $(SRC_DIR)/obcache.h
+test:	install test_dir $(TEST_DIR)/clock $(TEST_DIR)/obcache $(TEST_DIR)/timer
+	$(TEST_DIR)/clock
+	$(TEST_DIR)/obcache
+	$(TEST_DIR)/timer
+
+$(TEST_DIR)/obcache: $(SRC_DIR)/obcache.c $(SRC_DIR)/obcache.h
 	$(CC) $(COPTS) -o $@ -DTEST $<
 
-$(BIN_DIR)/clock:	$(SRC_DIR)/clock.c $(SRC_DIR)/clock.h
+$(TEST_DIR)/clock:	$(SRC_DIR)/clock.c $(SRC_DIR)/clock.h
 	$(CC) $(COPTS) -o $@ -DTEST $<
 
-$(BIN_DIR)/timer:	$(SRC_DIR)/timer.c $(SRC_DIR)/timer.h
+$(TEST_DIR)/timer:	$(SRC_DIR)/timer.c $(SRC_DIR)/timer.h
 	$(CC) $(COPTS) -o $@ -DTEST $< -lrt -L $(LIB_DIR) -lEvent
 
 backup:	realclean backup.tgz
@@ -64,5 +68,5 @@ backup:	realclean backup.tgz
 backup.tgz: $(SRC_DIR) Makefile README.md main.c
 	tar -zcvf $@ $^
 
-$(BIN_DIR)/crash_srv: main.c 
+$(BIN_DIR)/crash_srv: $(SRC_DIR)/main.c 
 	$(CC) $(COPTS) -o $@ $< $(LDOPTS) -lEvent -lrt
