@@ -2,7 +2,7 @@ SRC=clock.c obcache.c timer.c
 HDR=clock.h obcache.h timer.h
 OBJ=clock.o obcache.o timer.o
 
-LIB_NAME = Event
+LIB_NAME = QEvent
 
 SRC_DIR = ./src
 TGT_DIR = ./usr
@@ -24,7 +24,7 @@ all:	$(DEST_DIR) $(BIN_DIR)/crash_srv
 %.o: $(SRC_DIR)/%.c 
 	$(CC) -c -o $@ $< $(OPTS)
 
-$(LIB_DIR)/libEvent.so:	$(OBJ)
+$(LIB_DIR)/libQEvent.so:	$(OBJ)
 	ar rcs $@ $^
 	rm $(OBJ)
 
@@ -36,7 +36,11 @@ $(DEST_DIR):
 	cp $(SRC_DIR)/*.h $(INC_DIR)
 
 install:	$(DEST_DIR)
+ifeq ($(TGT_DIR), $(DEST_DIR))
+	@echo "DEST_DIR=<install_path> make install"
+else
 	cp -r $(TGT_DIR)/* $(DEST_DIR)
+endif
 	
 clean:
 	rm -rf *.o
@@ -62,13 +66,13 @@ $(TEST_DIR)/obcache: $(SRC_DIR)/obcache.c $(SRC_DIR)/obcache.h
 $(TEST_DIR)/clock:	$(SRC_DIR)/clock.c $(SRC_DIR)/clock.h
 	$(CC) $(COPTS) -o $@ -DTEST $<
 
-$(TEST_DIR)/timer:	$(SRC_DIR)/timer.c $(SRC_DIR)/timer.h $(LIB_DIR)/libEvent.so
-	$(CC) $(COPTS) -o $@ -DTEST $< $(LDOPTS) -lEvent -lrt
+$(TEST_DIR)/timer:	$(SRC_DIR)/timer.c $(SRC_DIR)/timer.h $(LIB_DIR)/libQEvent.so
+	$(CC) $(COPTS) -o $@ -DTEST $< $(LDOPTS) -lQEvent -lrt
 
 backup:	realclean backup.tgz
 
 backup.tgz: $(SRC_DIR) Makefile README.md main.c
 	tar -zcvf $@ $^
 
-$(BIN_DIR)/crash_srv: $(SRC_DIR)/main.c $(LIB_DIR)/libEvent.so
-	$(CC) $(COPTS) -o $@ $< $(LDOPTS) -lEvent -lrt
+$(BIN_DIR)/crash_srv: $(SRC_DIR)/main.c $(LIB_DIR)/libQEvent.so
+	$(CC) $(COPTS) -o $@ $< $(LDOPTS) -lQEvent -lrt
