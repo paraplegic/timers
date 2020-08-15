@@ -7,7 +7,7 @@
 
 /*
 	::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-	this is a small crash server, which logs to stderr some timer data, and then schedules
+	this is a small crash server, which logs to stdout some timer data, and then schedules
 	a segmentation fault in order to crash and create a core file.  It has no other purpose
 	and should not be used for anything, unless you actually know what you're doing. 
 	::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -22,7 +22,8 @@ int randval(int hi, int lo){
 
 void log_put( char *msg ){
 	char *ts = clk_human_local(0);
-	fprintf(stderr, "%s %s: %s\n", ts, SERVICE, msg );
+	fprintf(stdout, "%s %s: %s\n", ts, SERVICE, msg );
+	fflush(stdout);
 }
 
 void logger(int signal){
