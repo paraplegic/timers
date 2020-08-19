@@ -1,4 +1,4 @@
-# libEvent
+# libQEvent
 
 A small c library to implement timers using signals
 for oneshot or repeated callbacks
