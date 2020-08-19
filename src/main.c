@@ -23,6 +23,8 @@ int randval(int hi, int lo){
 void log_put( char *msg ){
 	char *ts = clk_human_local(0);
 	fprintf(stderr, "%s %s: %s\n", ts, SERVICE, msg );
+	fflush(stderr);
+	free(ts);
 }
 
 void logger(int signal){
@@ -41,8 +43,20 @@ int main( int argc, char **argv ){
 	char buf[BUF_SIZ];
 	SERVICE = argv[0];
 
+	int hi = 0 ; 
+	if (argc > 1) 
+		hi = atol(argv[1]);
+
+	int lo = 0 ; 
+	if (argc > 2)
+		lo = atol(argv[2]);
+
+	if (hi > 0){
+		if (lo == 0) lo = (int) (hi*0.8);
+	}
+
 	srand(clk_epoch_time(0));
-	crash_schedule = randval(32,10);
+	crash_schedule = randval(hi,lo);
 	snprintf(buf, BUF_SIZ, "crash scheduled in %d seconds.",crash_schedule);
 	log_put( buf );
 
@@ -51,7 +65,7 @@ int main( int argc, char **argv ){
 	tmr_create(TMR(3));
 	tmr_create(TMR(4));
 
-	tmr_start(TMR(1),tmr_interval(2,0,2,0), logger, "2 second timer");
+	// tmr_start(TMR(1),tmr_interval(2,0,2,0), logger, "2 second timer");
 	tmr_start(TMR(2),tmr_interval(5,0,5,0), logger, "5 second timer");
 	tmr_start(TMR(3),tmr_interval(20,0,0,0), logger, "20 second one-shot");
 	tmr_start(TMR(4),tmr_interval(crash_schedule,0,0,0), segfaultme, "scheduled segfault.");
