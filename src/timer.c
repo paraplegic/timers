@@ -164,6 +164,12 @@ void callbk( int sig ){
 	
 }
 
+void crash( int sig ){
+	unsigned long *bad_ptr = 0x3;
+	printf( "--- execution about to segfault on signal %d.\n", sig );
+	*bad_ptr = 0xdeadbeef;
+}
+
 char *allocate(char *s){
 	char *rv;
 	int len = strlen(s);
@@ -177,10 +183,12 @@ int main(){
 	printf( "::: TMR create: (%d) %ld :::\n", TMR(2), tmr_create(TMR(2)));
 	printf( "::: TMR create: (%d) %ld :::\n", TMR(3), tmr_create(TMR(3)));
 	printf( "::: TMR create: (%d) %ld :::\n", TMR(4), tmr_create(TMR(4)));
+	printf( "::: TMR create: (%d) %ld :::\n", TMR(5), tmr_create(TMR(5)));
 	tmr_start(TMR(1), tmr_interval( 0,msec_Nano(500),0,msec_Nano(500) ), callbk, "hi mom");
 	tmr_start(TMR(2), tmr_interval( 7,0,7,0 ), callbk, allocate("slower timer"));
 	tmr_start(TMR(3), tmr_interval( 10,0,0,0 ), callbk, allocate("one shot timer"));
 	tmr_start(TMR(4), tmr_interval( 60,0,60,0 ), callbk, allocate("one minute timer"));
+	tmr_start(TMR(5), tmr_interval( 65,0,65,0 ), crash, "Crash initiated.");
 
 	int ix = 0;
 	while(1){
