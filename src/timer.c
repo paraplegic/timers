@@ -139,7 +139,7 @@ void tmr_clear(){
 	Timer_t *ctxt ;
 	Cache_t *cache = get_cache();
 
-	for(int i=1;i++;i<cache->argc){
+	for(int i=1;i<cache->argc;i++){
 		ctxt = obj_get(i); 
 		if( ctxt != NULL ){
 			tid = ctxt->tid ;
